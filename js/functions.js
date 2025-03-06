@@ -50,7 +50,7 @@
 //var3
 const checkLength = (string, maxSimbols) => string.length <= maxSimbols;
 
-checkLength();
+checkLength("Привет!", 3);
 
 
 //Функция для проверки, является ли строка палиндромом
@@ -62,11 +62,10 @@ const checkStringPalindrome = function (polindromString) {
     reversString += normalString.at(i);
   }
 
-  const isPolindrom = reversString === normalString;
-  return isPolindrom;
+  return reversString === normalString;
 };
 
-checkStringPalindrome();
+checkStringPalindrome("");
 
 
 //Функция принимает строку, извлекает содержащиеся в ней цифры от 0 до 9 и возвращает их в виде целого положительного числа. Если в строке нет ни одной цифры, функция должна вернуть NaN:
@@ -100,5 +99,5 @@ const extractNumbers = function (string) {
   return result;
 };
 
-extractNumbers();
+extractNumbers(-10);
 
