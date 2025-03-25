@@ -101,3 +101,39 @@ const extractNumbers = function (string) {
 
 extractNumbers(-10);
 
+
+/*
+Функция, которая принимает время начала и конца рабочего дня, а также время старта и продолжительность встречи в минутах и возвращает true, если встреча не выходит за рамки рабочего дня, и false, если выходит.
+
+Функция, преобразовывает время в минуты (Начало рабочего дня, конец рабочего дня, время старта встречи, длительность встречи)
+Общее кол-во минут часы*60+минуты
+Перевод всех значений параметров в минуты
+Проверка на условие – встреча начинается на раньше начала рабочего дня и заканчивается не позже
+*/
+
+/*
+'8:00' - начало рабочего дня
+'17:30' - конец рабочего дня
+'14:00' - начало встречи
+90 - продолжительность встречи в минутах
+*/
+
+function checkMeeting(startWork, endWork, startMeeting, duration) {
+  function getMinutes(time) {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const workStart = getMinutes(startWork);
+  const workEnd = getMinutes(endWork);
+  const meetingStart = getMinutes(startMeeting);
+  const meetingEnd = meetingStart + duration;
+
+  return meetingStart >= workStart && meetingEnd <= workEnd;
+}
+
+console.log(checkMeeting('08:00', '17:30', '14:00', 90));
+console.log(checkMeeting('8:0', '10:0', '8:0', 120));
+console.log(checkMeeting('08:00', '14:30', '14:00', 90));
+console.log(checkMeeting('14:00', '17:30', '08:0', 90));
+console.log(checkMeeting('8:00', '17:30', '08:00', 900));
