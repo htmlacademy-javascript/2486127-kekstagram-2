@@ -132,8 +132,8 @@ function checkMeeting(startWork, endWork, startMeeting, duration) {
   return meetingStart >= workStart && meetingEnd <= workEnd;
 }
 
-console.log(checkMeeting('08:00', '17:30', '14:00', 90));
-console.log(checkMeeting('8:0', '10:0', '8:0', 120));
-console.log(checkMeeting('08:00', '14:30', '14:00', 90));
-console.log(checkMeeting('14:00', '17:30', '08:0', 90));
-console.log(checkMeeting('8:00', '17:30', '08:00', 900));
+window.console.log(checkMeeting('08:00', '17:30', '14:00', 90));
+window.console.log(checkMeeting('8:0', '10:0', '8:0', 120));
+window.console.log(checkMeeting('08:00', '14:30', '14:00', 90));
+window.console.log(checkMeeting('14:00', '17:30', '08:0', 90));
+window.console.log(checkMeeting('8:00', '17:30', '08:00', 900));
