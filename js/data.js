@@ -85,5 +85,4 @@ const createPhoto = (_, index) => ({
 // Создание массива фотографий
 const photos = Array.from({ length: PHOTO_COUNT }, createPhoto);
 
-window.console.log(photos);
-
+export {photos};

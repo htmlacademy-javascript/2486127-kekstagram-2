@@ -118,8 +118,8 @@ extractNumbers(-10);
 90 - продолжительность встречи в минутах
 */
 
-function checkMeeting(startWork, endWork, startMeeting, duration) {
-  function getMinutes(time) {
+const checkMeeting = (startWork, endWork, startMeeting, duration) => {
+  const getMinutes = (time) => {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
