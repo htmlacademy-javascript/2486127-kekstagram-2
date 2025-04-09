@@ -1,3 +1,5 @@
 import './util.js';
-import './data.js';
-import './miniatures.js';
+import {photos} from './data.js';
+import {renderMiniatures} from './miniatures';
+
+renderMiniatures (photos);
