@@ -15,9 +15,7 @@ const renderMiniatures = (photos) => {
     listFragment.appendChild(pictureElement);
   });
 
-
-pictureList.appendChild(listFragment);
-
+  pictureList.appendChild(listFragment);
 };
 
 export {renderMiniatures};
