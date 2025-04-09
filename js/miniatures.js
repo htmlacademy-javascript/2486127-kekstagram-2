@@ -16,6 +16,7 @@ const renderMiniatures = (photos) => {
   });
 
 pictureList.appendChild(listFragment);
+
 };
 
 export {renderMiniatures};
