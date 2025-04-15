@@ -46,7 +46,7 @@ function onDocumentKeydown (evt) {
     evt.preventDefault();
     closeBigPicture();
   }
-};
+}
 
 // Функция для открытия окна и заполнения данными
 const openBigPicture = ({url, likes, comments, description}) => {
