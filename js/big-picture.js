@@ -33,19 +33,19 @@ const renderComments = (comments) => {
   commentsList.appendChild(fragment);
 };
 
-// Обработчик нажатия клавиши Esc
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-};
-
 // Функция для закрытия окна
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
+};
+
+// Обработчик нажатия клавиши Esc
+function onDocumentKeydown (evt) {
+  if (isEscapeKey (evt)) {
+    evt.preventDefault();
+    closeBigPicture();
+  }
 };
 
 // Функция для открытия окна и заполнения данными
