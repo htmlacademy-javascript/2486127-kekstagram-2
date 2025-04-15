@@ -13,7 +13,7 @@ const renderMiniatures = (photos) => {
     img.dataset.id = id;
     picture.querySelector('.picture__likes').textContent = likes;
     picture.querySelector('.picture__comments').textContent = comments.length;
-    listFragment.appendChild(pictureElement);
+    listFragment.appendChild(picture);
   });
 
   pictureList.appendChild(listFragment);
