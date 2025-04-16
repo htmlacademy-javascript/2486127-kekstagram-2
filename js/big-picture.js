@@ -75,7 +75,7 @@ const openBigPicture = ({url, likes, comments, description}) => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-// Функция для связки с миниатюрами (делегирование событий)
+// Функция для связки с миниатюрами
 const showBigPicture = (photos) => {
   const picturesContainer = document.querySelector('.pictures');
 
@@ -83,7 +83,7 @@ const showBigPicture = (photos) => {
     const picture = evt.target.closest('.picture');
     if (picture) {
       evt.preventDefault();
-      const photoId = Number(picture.querySelector('.picture__img').src.match(/(\d+)\.jpg$/)[1]);
+      const photoId = Number(picture.dataset.id);
       const photo = photos.find(({id}) => id === photoId);
       if (photo) {
         openBigPicture(photo);

@@ -8,9 +8,9 @@ const renderMiniatures = (photos) => {
 
   photos.forEach(({id, url, description, likes, comments}) => {
     const picture = templatePicture.cloneNode(true);
+    picture.dataset.id = id;
     picture.querySelector('.picture__img').src = url;
     picture.querySelector('.picture__img').alt = description;
-    picture.querySelector('.picture__img').dataset.id = id;
     picture.querySelector('.picture__likes').textContent = likes;
     picture.querySelector('.picture__comments').textContent = comments.length;
     listFragment.appendChild(picture);
