@@ -60,7 +60,7 @@ const NAMES = [
 const createComment = (id) => ({
   id,
   avatar: `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`,
-  massage: getRandomArrayElement(MESSAGES),
+  message: getRandomArrayElement(MESSAGES),
   name: getRandomArrayElement(NAMES)
 });
 

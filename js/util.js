@@ -9,5 +9,8 @@ const getRandomInteger = (a, b) => {
 // Функция по генерации случайного индекса элемента из массива
 const getRandomArrayElement = (elements) => elements [getRandomInteger(0, elements.length - 1)];
 
-export {getRandomInteger, getRandomArrayElement};
+// Функция для проверки клавиши Esc
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey};
 
