@@ -65,7 +65,7 @@ const openEditingForm = () => {
   uploadInput.addEventListener('change', () => {
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onEditingFormEscKeydown);
-    body.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     uploadCancelButton.addEventListener('click', closeEditingForm);
   });
 };
@@ -75,7 +75,7 @@ function closeEditingForm() {
   uploadForm.reset();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEditingFormEscKeydown);
 }
 
