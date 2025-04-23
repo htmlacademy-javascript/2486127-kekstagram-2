@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util.js';
 
+const COMMENTS_PER_PAGE = 5;
+
 // Элементы DOM для работы с полноразмерным окном
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
@@ -11,8 +13,6 @@ const socialCaption = bigPicture.querySelector('.social__caption');
 const commentCountBlock = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
-
-const COMMENTS_PER_PAGE = 5;
 
 // Функция для создания разметки одного комментария
 const createCommentElement = ({avatar, name, message}) => {
@@ -39,7 +39,7 @@ const renderComments = (comments, shownCount) => {
 
   // Обновление счётчика
   commentShownCount.textContent = Math.min(shownCount, comments.length);
-  commentTotalCount.textContent = comments.length;
+
 
   // Видимость кнопки
   commentsLoader.classList.toggle('hidden', shownCount >= comments.length);
@@ -75,15 +75,18 @@ const openBigPicture = ({url, likes, comments, description}) => {
   commentCountBlock.classList.remove('hidden');
   commentsLoader.classList.remove('hidden');
 
-  // Инициализация комментариев
-  const initialShownCount = Math.min(comments.length, COMMENTS_PER_PAGE);
-  renderComments(comments, initialShownCount);
+
+  // Общее количество комментариев
+  commentTotalCount.textContent = comments.length;
+
+  // Показ комментариев
+  let shownCommentsCount = Math.min(comments.length, COMMENTS_PER_PAGE);
+  renderComments(comments, shownCommentsCount);
 
   // Обработчик для кнопки "Загрузить ещё"
   commentsLoader.onclick = () => {
-    const currentShown = Number(commentShownCount.textContent);
-    const newShownCount = currentShown + COMMENTS_PER_PAGE;
-    renderComments(comments, newShownCount);
+    shownCommentsCount += COMMENTS_PER_PAGE;
+    renderComments(comments, shownCommentsCount);
   };
 
   // Обработчики закрытия
