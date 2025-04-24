@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util.js';
 
+const COMMENTS_PER_PAGE = 5;
+
 // Элементы DOM для работы с полноразмерным окном
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
@@ -23,14 +25,24 @@ const createCommentElement = ({avatar, name, message}) => {
   return comment;
 };
 
-// Функция для заполнения списка комментариев
-const renderComments = (comments) => {
-  commentsList.innerHTML = '';
+// Функция для отображения комментариев
+const renderComments = (comments, shownCount) => {
+  commentsList.innerHTML = ''; // Очищаем список
   const fragment = document.createDocumentFragment();
-  comments.forEach((comment) => {
+
+  // Показ комментариев до shownCount
+  comments.slice(0, shownCount).forEach((comment) => {
     fragment.appendChild(createCommentElement(comment));
   });
+
   commentsList.appendChild(fragment);
+
+  // Обновление счётчика
+  commentShownCount.textContent = Math.min(shownCount, comments.length);
+
+
+  // Видимость кнопки
+  commentsLoader.classList.toggle('hidden', shownCount >= comments.length);
 };
 
 // Функция для закрытия окна
@@ -57,21 +69,28 @@ const openBigPicture = ({url, likes, comments, description}) => {
   bigPictureImg.src = url;
   bigPictureImg.alt = description;
   likesCount.textContent = likes;
-  commentShownCount.textContent = comments.length;
-  commentTotalCount.textContent = comments.length;
   socialCaption.textContent = description;
 
-  // Отрисовка комментариев
-  renderComments(comments);
+  // Показ блоков
+  commentCountBlock.classList.remove('hidden');
+  commentsLoader.classList.remove('hidden');
 
-  // Скрытие блоков счетчика и загрузки комментариев
-  commentCountBlock.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
 
-  // Обработчик закрытия по кнопке
+  // Общее количество комментариев
+  commentTotalCount.textContent = comments.length;
+
+  // Показ комментариев
+  let shownCommentsCount = Math.min(comments.length, COMMENTS_PER_PAGE);
+  renderComments(comments, shownCommentsCount);
+
+  // Обработчик для кнопки "Загрузить ещё"
+  commentsLoader.onclick = () => {
+    shownCommentsCount += COMMENTS_PER_PAGE;
+    renderComments(comments, shownCommentsCount);
+  };
+
+  // Обработчики закрытия
   closeButton.addEventListener('click', closeBigPicture);
-
-  // Обработчик Esc
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
