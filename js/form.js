@@ -20,14 +20,12 @@ const errorMessages = {
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__error-text'
+  errorTextClass: 'img-upload__error-text',
+  errorClass: 'img-upload__field-wrapper--error'
 }, false);
 
 // Проверка хэштэгов
-const getHashtags = (value) => {
-  const hashtags = value.trim().split(/\s+/);
-  return hashtags;
-};
+const getHashtags = (value) => value.trim().split(/\s+/);
 
 const checkSymbols = (value) => getHashtags(value).every((hashtag) => VALID_HASHTAG_STRING.test(hashtag));
 
@@ -39,24 +37,18 @@ const checkUniqueness = (value) => {
   return modifiedHashtags.length === new Set(modifiedHashtags).size;
 };
 
-pristine.addValidator(uploadHashtag, checkSymbols, errorMessages.INVALID_HASHTAG_STRING);
-pristine.addValidator(uploadHashtag, checkCount, errorMessages.COUNT_ERROR);
-pristine.addValidator(uploadHashtag, checkUniqueness, errorMessages.UNIQUENESS_ERROR);
-
 // Проверка комментариев
 const checkComment = (value) => value.length <= COMMENT_MAXLENGTH;
-
-pristine.addValidator(uploadComment, checkComment, errorMessages.COMMENT_MAXLENGTH_ERROR);
 
 // Проверка, является ли текстовое поле активным
 const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
 // Закрытие по esc
-const onEditingFormEscKeydown = (evt) => {
+const onFormEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
-    closeEditingForm();
+    closeForm();
   }
 };
 
@@ -64,20 +56,26 @@ const onEditingFormEscKeydown = (evt) => {
 const openEditingForm = () => {
   uploadInput.addEventListener('change', () => {
     uploadOverlay.classList.remove('hidden');
-    document.addEventListener('keydown', onEditingFormEscKeydown);
+    document.addEventListener('keydown', onFormEscKeydown);
     document.body.classList.add('modal-open');
-    uploadCancelButton.addEventListener('click', closeEditingForm);
+    uploadCancelButton.addEventListener('click', closeForm);
   });
 };
 
 // Закрытие формы
-function closeEditingForm() {
+function closeForm() {
   uploadForm.reset();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onEditingFormEscKeydown);
+  document.removeEventListener('keydown', onFormEscKeydown);
 }
+
+// Валидаторы хэштэгов и комментариев
+pristine.addValidator(uploadHashtag, checkSymbols, errorMessages.INVALID_HASHTAG_STRING);
+pristine.addValidator(uploadHashtag, checkCount, errorMessages.COUNT_ERROR);
+pristine.addValidator(uploadHashtag, checkUniqueness, errorMessages.UNIQUENESS_ERROR);
+pristine.addValidator(uploadComment, checkComment, errorMessages.COMMENT_MAXLENGTH_ERROR);
 
 // Проверка формы перед отправкой на сервер
 uploadForm.addEventListener('submit', (evt) => {
