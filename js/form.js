@@ -48,7 +48,7 @@ const isInputOnFocus = () =>
 const onFormEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
-    closeForm();
+    onFormClose();
   }
 };
 
@@ -58,12 +58,12 @@ const openEditingForm = () => {
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onFormEscKeydown);
     document.body.classList.add('modal-open');
-    uploadCancelButton.addEventListener('click', closeForm);
+    uploadCancelButton.addEventListener('click', onFormClose);
   });
 };
 
 // Закрытие формы
-function closeForm() {
+function onFormClose() {
   uploadForm.reset();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
