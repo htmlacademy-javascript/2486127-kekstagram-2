@@ -45,10 +45,10 @@ const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
 // Закрытие по esc
-const onFormEscKeydown = (evt) => {
+const onDocumentEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
-    onFormClose();
+    onUploadCancelButtonClick();
   }
 };
 
@@ -56,19 +56,19 @@ const onFormEscKeydown = (evt) => {
 const openEditingForm = () => {
   uploadInput.addEventListener('change', () => {
     uploadOverlay.classList.remove('hidden');
-    document.addEventListener('keydown', onFormEscKeydown);
+    document.addEventListener('keydown', onDocumentEscKeydown);
     document.body.classList.add('modal-open');
-    uploadCancelButton.addEventListener('click', onFormClose);
+    uploadCancelButton.addEventListener('click', onUploadCancelButtonClick);
   });
 };
 
 // Закрытие формы
-function onFormClose() {
+function onUploadCancelButtonClick() {
   uploadForm.reset();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onFormEscKeydown);
+  document.removeEventListener('keydown', onDocumentEscKeydown);
 }
 
 // Валидаторы хэштэгов и комментариев
