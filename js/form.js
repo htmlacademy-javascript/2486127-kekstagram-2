@@ -1,12 +1,5 @@
 import {isEscapeKey} from './util.js';
 
-const uploadForm = document.querySelector('.img-upload__form');
-const uploadInput = uploadForm.querySelector('.img-upload__input');
-const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
-const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
-const uploadHashtag = uploadForm.querySelector('.text__hashtags');
-const uploadComment = uploadForm.querySelector('.text__description');
-
 const HASHTAGS_MAXCOUNT = 5;
 const COMMENT_MAXLENGTH = 140;
 const VALID_HASHTAG_STRING = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -16,6 +9,13 @@ const errorMessages = {
   COUNT_ERROR: `Нельзя указать больше ${HASHTAGS_MAXCOUNT} хэш-тегов`,
   UNIQUENESS_ERROR: 'Хэш-теги не должны повторяться',
 };
+
+const uploadForm = document.querySelector('.img-upload__form');
+const uploadInput = uploadForm.querySelector('.img-upload__input');
+const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
+const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
+const uploadHashtag = uploadForm.querySelector('.text__hashtags');
+const uploadComment = uploadForm.querySelector('.text__description');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
