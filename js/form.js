@@ -1,4 +1,5 @@
 import {isEscapeKey} from './util.js';
+import {initImageEditor, resetImageEditor} from './image-editor.js';
 
 const HASHTAGS_MAXCOUNT = 5;
 const COMMENT_MAXLENGTH = 140;
@@ -59,6 +60,7 @@ const openEditingForm = () => {
     document.addEventListener('keydown', onDocumentEscKeydown);
     document.body.classList.add('modal-open');
     uploadCancelButton.addEventListener('click', onUploadCancelButtonClick);
+    initImageEditor(); // Инициализация редактора после открытия формы
   });
 };
 
@@ -66,6 +68,7 @@ const openEditingForm = () => {
 function onUploadCancelButtonClick() {
   uploadForm.reset();
   pristine.reset();
+  resetImageEditor(); // Сброс настроек редактора
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentEscKeydown);
