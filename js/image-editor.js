@@ -56,7 +56,6 @@ const effectSettings = {
 // Инициализация масштаба
 const initScale = () => {
   if (!imagePreview || !scaleSmallerButton || !scaleBiggerButton || !scaleValueInput) {
-    console.error('Scale elements not found');
     return;
   }
 
@@ -83,12 +82,10 @@ const initScale = () => {
 // Инициализация слайдера
 const initSlider = () => {
   if (!effectLevelSlider || !effectsList || !effectLevelValue || !effectLevelContainer) {
-    console.error('Slider elements not found');
     return;
   }
 
   if (typeof noUiSlider === 'undefined') {
-    console.error('noUiSlider is not defined');
     return;
   }
 
@@ -135,7 +132,6 @@ const initSlider = () => {
 
 // Инициализация редактора изображения
 const initImageEditor = () => {
-  console.log('Image editor initialized');
   initScale();
   initSlider();
 };
