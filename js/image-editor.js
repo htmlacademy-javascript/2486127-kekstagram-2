@@ -12,8 +12,8 @@ const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 
-// Конфигурация эффектов
-const effectSettings = {
+// Конфигурация эффектов (константы, которые представляют перечисления, именуют в PascalCase)
+const EffectSettings = {
   none: {
     filter: () => 'none',
     range: { min: 0, max: 100 },
@@ -81,11 +81,7 @@ const initScale = () => {
 
 // Инициализация слайдера
 const initSlider = () => {
-  if (!effectLevelSlider || !effectsList || !effectLevelValue || !effectLevelContainer) {
-    return;
-  }
-
-  if (typeof noUiSlider === 'undefined') {
+  if (!effectLevelSlider || !effectsList || !effectLevelValue || !effectLevelContainer || typeof noUiSlider === 'undefined') {
     return;
   }
 
@@ -99,7 +95,7 @@ const initSlider = () => {
   let currentEffect = 'none';
 
   const updateSlider = (effect) => {
-    const settings = effectSettings[effect];
+    const settings = EffectSettings[effect];
     effectLevelSlider.noUiSlider.updateOptions({
       range: settings.range,
       start: settings.start,
@@ -116,7 +112,7 @@ const initSlider = () => {
     const value = effectLevelSlider.noUiSlider.get();
     effectLevelValue.value = value;
     if (currentEffect !== 'none') {
-      imagePreview.style.filter = effectSettings[currentEffect].filter(value);
+      imagePreview.style.filter = EffectSettings[currentEffect].filter(value);
     }
   });
 
@@ -139,8 +135,9 @@ const initImageEditor = () => {
 // Сброс настроек
 const resetImageEditor = () => {
   if (imagePreview) {
-    imagePreview.style.transform = 'scale(1)';
-    imagePreview.style.filter = 'none';
+    // imagePreview.style.transform = 'scale(1)';
+    // imagePreview.style.filter = 'none';
+    imagePreview.style = '';
   }
   if (scaleValueInput) {
     scaleValueInput.value = '100%';
