@@ -1,9 +1,14 @@
 import {isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
+import {sendData} from './api.js';
 
 const HASHTAGS_MAXCOUNT = 5;
 const COMMENT_MAXLENGTH = 140;
 const VALID_HASHTAG_STRING = /^#[a-zа-яё0-9]{1,19}$/i;
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...',
+};
 const errorMessages = {
   INVALID_HASHTAG_STRING: 'Хэш-тег должен начинаться с #, состоять из букв и чисел без пробелов, и быть не диннее 20 символов, включая #',
   COMMENT_MAXLENGTH_ERROR: `Максимальная длина комментария ${COMMENT_MAXLENGTH} символов`,
@@ -17,6 +22,7 @@ const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
 const uploadHashtag = uploadForm.querySelector('.text__hashtags');
 const uploadComment = uploadForm.querySelector('.text__description');
+const submitButton = uploadForm.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -64,6 +70,66 @@ const openEditingForm = () => {
   });
 };
 
+// Показ сообщения об успехе
+const showSuccessMessage = () => {
+  const template = document.querySelector('#success').content.querySelector('.success');
+  const successElement = template.cloneNode(true);
+  const successButton = successElement.querySelector('.success__button');
+
+  const closeSuccess = () => {
+    successElement.remove();
+    document.removeEventListener('keydown', onSuccessKeydown);
+    document.removeEventListener('click', onSuccessClick);
+  };
+
+  function onSuccessKeydown(evt) {
+    if (isEscapeKey(evt)) {
+      closeSuccess();
+    }
+  }
+
+  function onSuccessClick(evt) {
+    if (!evt.target.closest('.success__inner')) {
+      closeSuccess();
+    }
+  }
+
+  successButton.addEventListener('click', closeSuccess);
+  document.addEventListener('keydown', onSuccessKeydown);
+  document.addEventListener('click', onSuccessClick);
+  document.body.appendChild(successElement);
+};
+
+// Показ сообщения об ошибке
+const showErrorMessage = () => {
+  const template = document.querySelector('#error').content.querySelector('.error');
+  const errorElement = template.cloneNode(true);
+  const errorButton = errorElement.querySelector('.error__button');
+
+  const closeError = () => {
+    errorElement.remove();
+    document.removeEventListener('keydown', onErrorKeydown);
+    document.removeEventListener('click', onErrorClick);
+  };
+
+  function onErrorKeydown(evt) {
+    if (isEscapeKey(evt)) {
+      closeError();
+    }
+  }
+
+  function onErrorClick(evt) {
+    if (!evt.target.closest('.error__inner')) {
+      closeError();
+    }
+  }
+
+  errorButton.addEventListener('click', closeError);
+  document.addEventListener('keydown', onErrorKeydown);
+  document.addEventListener('click', onErrorClick);
+  document.body.appendChild(errorElement);
+};
+
 // Закрытие формы
 function onUploadCancelButtonClick() {
   uploadForm.reset();
@@ -74,18 +140,44 @@ function onUploadCancelButtonClick() {
   document.removeEventListener('keydown', onDocumentEscKeydown);
 }
 
+// Блокировка/разблокировка кнопки отправки
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
 // Валидаторы хэштэгов и комментариев
 pristine.addValidator(uploadHashtag, checkSymbols, errorMessages.INVALID_HASHTAG_STRING);
 pristine.addValidator(uploadHashtag, checkCount, errorMessages.COUNT_ERROR);
 pristine.addValidator(uploadHashtag, checkUniqueness, errorMessages.UNIQUENESS_ERROR);
 pristine.addValidator(uploadComment, checkComment, errorMessages.COMMENT_MAXLENGTH_ERROR);
 
-// Проверка формы перед отправкой на сервер
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    uploadForm.submit();
-  }
-});
+// Обработчик отправки формы
+const setFormSubmit = (onSuccess) => {
+  uploadForm.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    if (pristine.validate()) {
+      blockSubmitButton();
+      try {
+        await sendData(new FormData(uploadForm));
+        onSuccess();
+        showSuccessMessage();
+      } catch {
+        showErrorMessage();
+      } finally {
+        unblockSubmitButton();
+      }
+    }
+  });
+};
+
+// Инициализация формы
+openEditingForm();
+setFormSubmit(onUploadCancelButtonClick);
 
 export {openEditingForm};
