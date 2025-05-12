@@ -69,12 +69,12 @@ const onUploadCancelButtonClick = () => {
 };
 
 // Закрытие по esc
-const onDocumentEscKeydown = (evt) => {
+function onDocumentEscKeydown (evt) {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
     onUploadCancelButtonClick();
   }
-};
+}
 
 // Показ сообщения об успехе
 const showSuccessMessage = () => {
