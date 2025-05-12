@@ -1,3 +1,4 @@
+// form.js
 import {isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
 import {sendData} from './api.js';
@@ -10,19 +11,21 @@ const SubmitButtonText = {
   SENDING: 'Публикую...',
 };
 const errorMessages = {
-  INVALID_HASHTAG_STRING: 'Хэш-тег должен начинаться с #, состоять из букв и чисел без пробелов, и быть не диннее 20 символов, включая #',
+  INVALID_HASHTAG_STRING: 'Хэш-тег должен начинаться с #, состоять из букв и чисел без пробелов, и быть не длиннее 20 символов, включая #',
   COMMENT_MAXLENGTH_ERROR: `Максимальная длина комментария ${COMMENT_MAXLENGTH} символов`,
   COUNT_ERROR: `Нельзя указать больше ${HASHTAGS_MAXCOUNT} хэш-тегов`,
   UNIQUENESS_ERROR: 'Хэш-теги не должны повторяться',
 };
 
 const uploadForm = document.querySelector('.img-upload__form');
-const uploadInput = uploadForm.querySelector('.img-upload__input');
-const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
-const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
-const uploadHashtag = uploadForm.querySelector('.text__hashtags');
-const uploadComment = uploadForm.querySelector('.text__description');
-const submitButton = uploadForm.querySelector('.img-upload__submit');
+const uploadInput = document.querySelector('.img-upload__input');
+const uploadOverlay = document.querySelector('.img-upload__overlay');
+const uploadCancelButton = document.querySelector('.img-upload__cancel');
+const uploadHashtag = document.querySelector('.text__hashtags');
+const uploadComment = document.querySelector('.text__description');
+const submitButton = document.querySelector('.img-upload__submit');
+const imagePreview = document.querySelector('.img-upload__preview img');
+const effectPreviews = document.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -51,23 +54,26 @@ const checkComment = (value) => value.length <= COMMENT_MAXLENGTH;
 const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
+// Закрытие формы
+const onUploadCancelButtonClick = () => {
+  uploadForm.reset();
+  pristine.reset();
+  resetImageEditor();
+  uploadOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentEscKeydown);
+  imagePreview.src = '';
+  effectPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+};
+
 // Закрытие по esc
 const onDocumentEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
     onUploadCancelButtonClick();
   }
-};
-
-// Открытие формы редактирования
-const openEditingForm = () => {
-  uploadInput.addEventListener('change', () => {
-    uploadOverlay.classList.remove('hidden');
-    document.addEventListener('keydown', onDocumentEscKeydown);
-    document.body.classList.add('modal-open');
-    uploadCancelButton.addEventListener('click', onUploadCancelButtonClick);
-    initImageEditor(); // Инициализация редактора после открытия формы
-  });
 };
 
 // Показ сообщения об успехе
@@ -130,16 +136,6 @@ const showErrorMessage = () => {
   document.body.appendChild(errorElement);
 };
 
-// Закрытие формы
-function onUploadCancelButtonClick() {
-  uploadForm.reset();
-  pristine.reset();
-  resetImageEditor(); // Сброс настроек редактора
-  uploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentEscKeydown);
-}
-
 // Блокировка/разблокировка кнопки отправки
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -157,15 +153,38 @@ pristine.addValidator(uploadHashtag, checkCount, errorMessages.COUNT_ERROR);
 pristine.addValidator(uploadHashtag, checkUniqueness, errorMessages.UNIQUENESS_ERROR);
 pristine.addValidator(uploadComment, checkComment, errorMessages.COMMENT_MAXLENGTH_ERROR);
 
-// Обработчик отправки формы
-const setFormSubmit = (onSuccess) => {
+// Открытие формы редактирования и отправка формы
+const openEditingForm = () => {
+  uploadInput.addEventListener('change', () => {
+    const file = uploadInput.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const fileUrl = URL.createObjectURL(file);
+      imagePreview.src = fileUrl;
+
+      // Обновление миниатюр эффектов
+      effectPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${fileUrl})`;
+      });
+
+      uploadCancelButton.addEventListener('click', () => {
+        URL.revokeObjectURL(fileUrl);
+      }, { once: true });
+
+      uploadOverlay.classList.remove('hidden');
+      document.addEventListener('keydown', onDocumentEscKeydown);
+      document.body.classList.add('modal-open');
+      uploadCancelButton.addEventListener('click', onUploadCancelButtonClick);
+      initImageEditor();
+    }
+  });
+
   uploadForm.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     if (pristine.validate()) {
       blockSubmitButton();
       try {
         await sendData(new FormData(uploadForm));
-        onSuccess();
+        onUploadCancelButtonClick();
         showSuccessMessage();
       } catch {
         showErrorMessage();
@@ -175,9 +194,5 @@ const setFormSubmit = (onSuccess) => {
     }
   });
 };
-
-// Инициализация формы
-openEditingForm();
-setFormSubmit(onUploadCancelButtonClick);
 
 export {openEditingForm};
