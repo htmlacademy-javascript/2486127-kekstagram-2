@@ -54,6 +54,14 @@ const checkComment = (value) => value.length <= COMMENT_MAXLENGTH;
 const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
+// Закрытие по esc
+const onDocumentEscKeydown = (evt) => {
+  if (isEscapeKey(evt) && !isInputOnFocus()) {
+    evt.preventDefault();
+    onUploadCancelButtonClick();
+  }
+};
+
 // Закрытие формы
 const onUploadCancelButtonClick = () => {
   uploadForm.reset();
@@ -66,14 +74,6 @@ const onUploadCancelButtonClick = () => {
   effectPreviews.forEach((preview) => {
     preview.style.backgroundImage = '';
   });
-};
-
-// Закрытие по esc
-const onDocumentEscKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isInputOnFocus()) {
-    evt.preventDefault();
-    onUploadCancelButtonClick();
-  }
 };
 
 // Показ сообщения об успехе
