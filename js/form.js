@@ -54,8 +54,8 @@ const checkComment = (value) => value.length <= COMMENT_MAXLENGTH;
 const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
-// Закрытие формы
-const onUploadCancelButtonClick = () => {
+// Закрытие формы редактирования
+const closeEditingForm = () => {
   uploadForm.reset();
   pristine.reset();
   resetImageEditor();
@@ -72,9 +72,14 @@ const onUploadCancelButtonClick = () => {
 function onDocumentEscKeydown (evt) {
   if (isEscapeKey(evt) && !isInputOnFocus()) {
     evt.preventDefault();
-    onUploadCancelButtonClick();
+    closeEditingForm();
   }
 }
+
+// Обработчик нажатия кнопки отмены
+const onUploadCancelButtonClick = () => {
+  closeEditingForm();
+};
 
 // Показ сообщения об успехе
 const showSuccessMessage = () => {
@@ -184,7 +189,7 @@ const openEditingForm = () => {
       blockSubmitButton();
       try {
         await sendData(new FormData(uploadForm));
-        onUploadCancelButtonClick();
+        closeEditingForm();
         showSuccessMessage();
       } catch {
         showErrorMessage();
