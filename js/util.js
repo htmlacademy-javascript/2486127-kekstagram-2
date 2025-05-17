@@ -12,5 +12,14 @@ const getRandomArrayElement = (elements) => elements [getRandomInteger(0, elemen
 // Функция для проверки клавиши Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey};
+// Устранение дребезга
+function debounce(callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey, debounce};
 
