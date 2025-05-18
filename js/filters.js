@@ -1,5 +1,3 @@
-
-
 import {renderMiniatures} from './miniatures.js';
 import {showBigPicture} from './big-picture.js';
 import {debounce, getRandomSubset} from './util.js';
