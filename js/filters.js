@@ -55,19 +55,19 @@ const initFilters = (photos) => {
   }, FILTER_DEBOUNCE_DELAY);
 
   filterDefault.addEventListener('click', () => {
-    if (!filterDefault.classList.contains('img-filters__button--active')) {
+    if (filterDefault !== currentActiveButton) {
       debouncedRender(getDefaultPhotos, filterDefault);
     }
   });
 
   filterRandom.addEventListener('click', () => {
-    if (!filterRandom.classList.contains('img-filters__button--active')) {
+    if (filterRandom !== currentActiveButton) {
       debouncedRender(getRandomPhotos, filterRandom);
     }
   });
 
   filterDiscussed.addEventListener('click', () => {
-    if (!filterDiscussed.classList.contains('img-filters__button--active')) {
+    if (filterDiscussed !== currentActiveButton) {
       debouncedRender(getDiscussedPhotos, filterDiscussed);
     }
   });
