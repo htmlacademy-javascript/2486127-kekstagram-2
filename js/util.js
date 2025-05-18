@@ -12,5 +12,20 @@ const getRandomArrayElement = (elements) => elements [getRandomInteger(0, elemen
 // Функция для проверки клавиши Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey};
+// Функция для получения случайного подмножества массива
+const getRandomSubset = (array, count) => {
+  const shuffled = array.slice().sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, array.length));
+};
+
+// Устранение дребезга
+function debounce(callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey, getRandomSubset, debounce};
 
