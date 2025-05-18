@@ -1,6 +1,8 @@
+
+
 import {renderMiniatures} from './miniatures.js';
 import {showBigPicture} from './big-picture.js';
-import {debounce} from './util.js';
+import {debounce, getRandomSubset} from './util.js';
 
 const FILTER_DEBOUNCE_DELAY = 500;
 const RANDOM_PHOTOS_COUNT = 10;
@@ -10,11 +12,7 @@ const filterDefault = document.querySelector('#filter-default');
 const filterRandom = document.querySelector('#filter-random');
 const filterDiscussed = document.querySelector('#filter-discussed');
 
-// Функция для получения случайного подмножества массива
-const getRandomSubset = (array, count) => {
-  const shuffled = array.slice().sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(count, array.length));
-};
+let currentActiveButton = filterDefault;
 
 // Удаление существующих миниатюр
 const clearMiniatures = () => {
@@ -31,8 +29,12 @@ const getDiscussedPhotos = (photos) => photos.slice().sort((a, b) => b.comments.
 
 // Обновление активного фильтра
 const setActiveFilter = (activeButton) => {
-  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+  if (activeButton === currentActiveButton) {
+    return;
+  }
+  currentActiveButton.classList.remove('img-filters__button--active');
   activeButton.classList.add('img-filters__button--active');
+  currentActiveButton = activeButton;
 };
 
 // Отрисовка фотографий с фильтром
@@ -53,15 +55,21 @@ const initFilters = (photos) => {
   }, FILTER_DEBOUNCE_DELAY);
 
   filterDefault.addEventListener('click', () => {
-    debouncedRender(getDefaultPhotos, filterDefault);
+    if (!filterDefault.classList.contains('img-filters__button--active')) {
+      debouncedRender(getDefaultPhotos, filterDefault);
+    }
   });
 
   filterRandom.addEventListener('click', () => {
-    debouncedRender(getRandomPhotos, filterRandom);
+    if (!filterRandom.classList.contains('img-filters__button--active')) {
+      debouncedRender(getRandomPhotos, filterRandom);
+    }
   });
 
   filterDiscussed.addEventListener('click', () => {
-    debouncedRender(getDiscussedPhotos, filterDiscussed);
+    if (!filterDiscussed.classList.contains('img-filters__button--active')) {
+      debouncedRender(getDiscussedPhotos, filterDiscussed);
+    }
   });
 };
 
