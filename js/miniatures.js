@@ -1,5 +1,3 @@
-// Отображение фотографий других пользователей (отрисовка миниатюр)
-
 const renderMiniatures = (photos) => {
 
   const pictureList = document.querySelector('.pictures');
