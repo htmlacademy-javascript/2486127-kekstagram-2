@@ -33,9 +33,9 @@ const setActiveFilter = (activeButton) => {
 const renderFilteredPhotos = (photos, filterFn, activeButton) => {
   clearMiniatures();
   const filteredPhotos = filterFn(photos);
+  setActiveFilter(activeButton);
   renderMiniatures(filteredPhotos);
   showBigPicture(filteredPhotos);
-  setActiveFilter(activeButton);
 };
 
 const initFilters = (photos) => {
