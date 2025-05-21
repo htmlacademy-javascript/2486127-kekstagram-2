@@ -16,6 +16,8 @@ const showDataError = () => {
 };
 
 const init = async () => {
+  openEditingForm();
+
   try {
     const photos = await loadPhotos();
     renderMiniatures(photos);
@@ -24,7 +26,6 @@ const init = async () => {
   } catch {
     showDataError();
   }
-  openEditingForm();
 };
 
 init();

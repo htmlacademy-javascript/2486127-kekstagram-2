@@ -100,13 +100,13 @@ const initSlider = () => {
     });
 
     effectLevelContainer.classList.toggle('hidden', settings.hidden || false);
-    effectLevelValue.value = settings.start;
+    effectLevelValue.value = Number.isInteger(settings.start) ? settings.start : settings.start.toFixed(1);
     imagePreview.style.filter = settings.filter(settings.start);
   };
 
   effectLevelSlider.noUiSlider.on('update', () => {
-    const value = effectLevelSlider.noUiSlider.get();
-    effectLevelValue.value = value;
+    const value = parseFloat(effectLevelSlider.noUiSlider.get());
+    effectLevelValue.value = Number.isInteger(value) ? value : value.toFixed(1);
     if (currentEffect !== 'none') {
       imagePreview.style.filter = EffectSettings[currentEffect].filter(value);
     }

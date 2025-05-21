@@ -33,7 +33,7 @@ const pristine = new Pristine(uploadForm, {
   errorClass: 'img-upload__field-wrapper--error'
 }, false);
 
-const getHashtags = (value) => value.trim().split(/\s+/);
+const getHashtags = (value) => value.trim().split(/\s+/).filter((hashtag) => hashtag.length > 0);
 const checkSymbols = (value) => getHashtags(value).every((hashtag) => VALID_HASHTAG_STRING.test(hashtag));
 const checkCount = (value) => getHashtags(value).length <= HASHTAGS_MAXCOUNT;
 
