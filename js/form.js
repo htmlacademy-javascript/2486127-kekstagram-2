@@ -1,4 +1,3 @@
-// form.js
 import {isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
 import {sendData} from './api.js';
@@ -34,11 +33,8 @@ const pristine = new Pristine(uploadForm, {
   errorClass: 'img-upload__field-wrapper--error'
 }, false);
 
-// Проверка хэштэгов
-const getHashtags = (value) => value.trim().split(/\s+/);
-
+const getHashtags = (value) => value.trim().split(/\s+/).filter((hashtag) => hashtag.length > 0);
 const checkSymbols = (value) => getHashtags(value).every((hashtag) => VALID_HASHTAG_STRING.test(hashtag));
-
 const checkCount = (value) => getHashtags(value).length <= HASHTAGS_MAXCOUNT;
 
 const checkUniqueness = (value) => {
@@ -47,14 +43,11 @@ const checkUniqueness = (value) => {
   return modifiedHashtags.length === new Set(modifiedHashtags).size;
 };
 
-// Проверка комментариев
 const checkComment = (value) => value.length <= COMMENT_MAXLENGTH;
 
-// Проверка, является ли текстовое поле активным
 const isInputOnFocus = () =>
   document.activeElement === uploadHashtag || document.activeElement === uploadComment;
 
-// Закрытие формы редактирования
 const closeEditingForm = () => {
   uploadForm.reset();
   pristine.reset();
@@ -68,27 +61,24 @@ const closeEditingForm = () => {
   });
 };
 
-// Закрытие по esc
 function onDocumentEscKeydown (evt) {
-  if (isEscapeKey(evt) && !isInputOnFocus()) {
+  if (isEscapeKey(evt) && !isInputOnFocus() && !document.querySelector('.error')) {
     evt.preventDefault();
     closeEditingForm();
   }
 }
 
-// Обработчик нажатия кнопки отмены
 const onUploadCancelButtonClick = () => {
   closeEditingForm();
 };
 
-// Показ сообщения об успехе
 const showSuccessMessage = () => {
   const template = document.querySelector('#success').content.querySelector('.success');
-  const successElement = template.cloneNode(true);
-  const successButton = successElement.querySelector('.success__button');
+  const successMessage = template.cloneNode(true);
+  const successButton = successMessage.querySelector('.success__button');
 
   const closeSuccess = () => {
-    successElement.remove();
+    successMessage.remove();
     document.removeEventListener('keydown', onSuccessKeydown);
     document.removeEventListener('click', onSuccessClick);
   };
@@ -108,17 +98,16 @@ const showSuccessMessage = () => {
   successButton.addEventListener('click', closeSuccess);
   document.addEventListener('keydown', onSuccessKeydown);
   document.addEventListener('click', onSuccessClick);
-  document.body.appendChild(successElement);
+  document.body.appendChild(successMessage);
 };
 
-// Показ сообщения об ошибке
 const showErrorMessage = () => {
   const template = document.querySelector('#error').content.querySelector('.error');
-  const errorElement = template.cloneNode(true);
-  const errorButton = errorElement.querySelector('.error__button');
+  const errorMessage = template.cloneNode(true);
+  const errorButton = errorMessage.querySelector('.error__button');
 
   const closeError = () => {
-    errorElement.remove();
+    errorMessage.remove();
     document.removeEventListener('keydown', onErrorKeydown);
     document.removeEventListener('click', onErrorClick);
   };
@@ -138,10 +127,9 @@ const showErrorMessage = () => {
   errorButton.addEventListener('click', closeError);
   document.addEventListener('keydown', onErrorKeydown);
   document.addEventListener('click', onErrorClick);
-  document.body.appendChild(errorElement);
+  document.body.appendChild(errorMessage);
 };
 
-// Блокировка/разблокировка кнопки отправки
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = SubmitButtonText.SENDING;
@@ -152,13 +140,11 @@ const unblockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.IDLE;
 };
 
-// Валидаторы хэштэгов и комментариев
 pristine.addValidator(uploadHashtag, checkSymbols, errorMessages.INVALID_HASHTAG_STRING);
 pristine.addValidator(uploadHashtag, checkCount, errorMessages.COUNT_ERROR);
 pristine.addValidator(uploadHashtag, checkUniqueness, errorMessages.UNIQUENESS_ERROR);
 pristine.addValidator(uploadComment, checkComment, errorMessages.COMMENT_MAXLENGTH_ERROR);
 
-// Открытие формы редактирования и отправка формы
 const openEditingForm = () => {
   uploadInput.addEventListener('change', () => {
     const file = uploadInput.files[0];
@@ -166,7 +152,6 @@ const openEditingForm = () => {
       const fileUrl = URL.createObjectURL(file);
       imagePreview.src = fileUrl;
 
-      // Обновление миниатюр эффектов
       effectPreviews.forEach((preview) => {
         preview.style.backgroundImage = `url(${fileUrl})`;
       });
