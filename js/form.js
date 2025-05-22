@@ -62,7 +62,7 @@ const closeEditingForm = () => {
 };
 
 function onDocumentEscKeydown (evt) {
-  if (isEscapeKey(evt) && !isInputOnFocus()) {
+  if (isEscapeKey(evt) && !isInputOnFocus() && !document.querySelector('.error')) {
     evt.preventDefault();
     closeEditingForm();
   }
