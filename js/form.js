@@ -74,11 +74,11 @@ const onUploadCancelButtonClick = () => {
 
 const showSuccessMessage = () => {
   const template = document.querySelector('#success').content.querySelector('.success');
-  const successElement = template.cloneNode(true);
-  const successButton = successElement.querySelector('.success__button');
+  const successMessage = template.cloneNode(true);
+  const successButton = successMessage.querySelector('.success__button');
 
   const closeSuccess = () => {
-    successElement.remove();
+    successMessage.remove();
     document.removeEventListener('keydown', onSuccessKeydown);
     document.removeEventListener('click', onSuccessClick);
   };
@@ -98,16 +98,16 @@ const showSuccessMessage = () => {
   successButton.addEventListener('click', closeSuccess);
   document.addEventListener('keydown', onSuccessKeydown);
   document.addEventListener('click', onSuccessClick);
-  document.body.appendChild(successElement);
+  document.body.appendChild(successMessage);
 };
 
 const showErrorMessage = () => {
   const template = document.querySelector('#error').content.querySelector('.error');
-  const errorElement = template.cloneNode(true);
-  const errorButton = errorElement.querySelector('.error__button');
+  const errorMessage = template.cloneNode(true);
+  const errorButton = errorMessage.querySelector('.error__button');
 
   const closeError = () => {
-    errorElement.remove();
+    errorMessage.remove();
     document.removeEventListener('keydown', onErrorKeydown);
     document.removeEventListener('click', onErrorClick);
   };
@@ -127,7 +127,7 @@ const showErrorMessage = () => {
   errorButton.addEventListener('click', closeError);
   document.addEventListener('keydown', onErrorKeydown);
   document.addEventListener('click', onErrorClick);
-  document.body.appendChild(errorElement);
+  document.body.appendChild(errorMessage);
 };
 
 const blockSubmitButton = () => {

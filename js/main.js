@@ -8,10 +8,10 @@ const DATA_ERROR_TIMEOUT = 5000;
 
 const showDataError = () => {
   const template = document.querySelector('#data-error').content.querySelector('.data-error');
-  const errorElement = template.cloneNode(true);
-  document.body.appendChild(errorElement);
+  const errorMessage = template.cloneNode(true);
+  document.body.appendChild(errorMessage);
   setTimeout(() => {
-    errorElement.remove();
+    errorMessage.remove();
   }, DATA_ERROR_TIMEOUT);
 };
 

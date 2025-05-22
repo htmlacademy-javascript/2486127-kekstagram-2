@@ -2,7 +2,6 @@ import {renderMiniatures} from './miniatures.js';
 import {showBigPicture} from './big-picture.js';
 import {debounce, getRandomSubset} from './util.js';
 
-const FILTER_DEBOUNCE_DELAY = 500;
 const RANDOM_PHOTOS_COUNT = 10;
 
 const imgFilters = document.querySelector('.img-filters');
@@ -43,7 +42,7 @@ const initFilters = (photos) => {
 
   const debouncedRender = debounce((filterFn, activeButton) => {
     renderFilteredPhotos(photos, filterFn, activeButton);
-  }, FILTER_DEBOUNCE_DELAY);
+  });
 
   filterDefault.addEventListener('click', () => {
     if (filterDefault !== currentActiveButton) {
