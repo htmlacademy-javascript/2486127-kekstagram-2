@@ -12,7 +12,6 @@ const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 const effectLevelContainer = document.querySelector('.img-upload__effect-level');
 
-// Конфигурация эффектов (константы, которые представляют перечисления, именуют в PascalCase)
 const EffectSettings = {
   none: {
     filter: () => 'none',
@@ -53,7 +52,6 @@ const EffectSettings = {
   }
 };
 
-// Инициализация масштаба
 const initScale = () => {
   if (!imagePreview || !scaleSmallerButton || !scaleBiggerButton || !scaleValueInput) {
     return;
@@ -79,7 +77,6 @@ const initScale = () => {
   updateScale();
 };
 
-// Инициализация слайдера
 const initSlider = () => {
   if (!effectLevelSlider || !effectsList || !effectLevelValue || !effectLevelContainer || typeof noUiSlider === 'undefined') {
     return;
@@ -103,40 +100,33 @@ const initSlider = () => {
     });
 
     effectLevelContainer.classList.toggle('hidden', settings.hidden || false);
-    effectLevelValue.value = settings.start;
+    effectLevelValue.value = Number.isInteger(settings.start) ? settings.start : settings.start.toFixed(1);
     imagePreview.style.filter = settings.filter(settings.start);
   };
 
-  // Обработчик изменения слайдера
   effectLevelSlider.noUiSlider.on('update', () => {
-    const value = effectLevelSlider.noUiSlider.get();
-    effectLevelValue.value = value;
+    const value = parseFloat(effectLevelSlider.noUiSlider.get());
+    effectLevelValue.value = Number.isInteger(value) ? value : value.toFixed(1);
     if (currentEffect !== 'none') {
       imagePreview.style.filter = EffectSettings[currentEffect].filter(value);
     }
   });
 
-  // Обработчик переключения эффектов
   effectsList.addEventListener('change', (evt) => {
     currentEffect = evt.target.value;
     updateSlider(currentEffect);
   });
 
-  // Начальная настройка для эффекта "Оригинал"
   updateSlider('none');
 };
 
-// Инициализация редактора изображения
 const initImageEditor = () => {
   initScale();
   initSlider();
 };
 
-// Сброс настроек
 const resetImageEditor = () => {
   if (imagePreview) {
-    // imagePreview.style.transform = 'scale(1)';
-    // imagePreview.style.filter = 'none';
     imagePreview.style = '';
   }
   if (scaleValueInput) {
