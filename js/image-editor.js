@@ -52,7 +52,7 @@ const EffectSettings = {
   }
 };
 
-const initScale = () => {
+const initializeScale = () => {
   if (!imagePreview || !scaleSmallerButton || !scaleBiggerButton || !scaleValueInput) {
     return;
   }
@@ -77,7 +77,7 @@ const initScale = () => {
   updateScale();
 };
 
-const initSlider = () => {
+const initializeSlider = () => {
   if (!effectLevelSlider || !effectsList || !effectLevelValue || !effectLevelContainer || typeof noUiSlider === 'undefined') {
     return;
   }
@@ -120,9 +120,9 @@ const initSlider = () => {
   updateSlider('none');
 };
 
-const initImageEditor = () => {
-  initScale();
-  initSlider();
+const initializeImageEditor = () => {
+  initializeScale();
+  initializeSlider();
 };
 
 const resetImageEditor = () => {
@@ -140,4 +140,4 @@ const resetImageEditor = () => {
   }
 };
 
-export {initImageEditor, resetImageEditor};
+export {initializeImageEditor, resetImageEditor};

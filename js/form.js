@@ -1,5 +1,5 @@
 import {isEscapeKey} from './util.js';
-import {initImageEditor, resetImageEditor} from './image-editor.js';
+import {initializeImageEditor, resetImageEditor} from './image-editor.js';
 import {sendData} from './api.js';
 
 const HASHTAGS_MAXCOUNT = 5;
@@ -77,7 +77,7 @@ const showSuccessMessage = () => {
   const successMessage = template.cloneNode(true);
   const successButton = successMessage.querySelector('.success__button');
 
-  const closeSuccess = () => {
+  const onSuccessButtonClick = () => {
     successMessage.remove();
     document.removeEventListener('keydown', onSuccessKeydown);
     document.removeEventListener('click', onSuccessClick);
@@ -85,17 +85,17 @@ const showSuccessMessage = () => {
 
   function onSuccessKeydown(evt) {
     if (isEscapeKey(evt)) {
-      closeSuccess();
+      onSuccessButtonClick();
     }
   }
 
   function onSuccessClick(evt) {
     if (!evt.target.closest('.success__inner')) {
-      closeSuccess();
+      onSuccessButtonClick();
     }
   }
 
-  successButton.addEventListener('click', closeSuccess);
+  successButton.addEventListener('click', onSuccessButtonClick);
   document.addEventListener('keydown', onSuccessKeydown);
   document.addEventListener('click', onSuccessClick);
   document.body.appendChild(successMessage);
@@ -106,7 +106,7 @@ const showErrorMessage = () => {
   const errorMessage = template.cloneNode(true);
   const errorButton = errorMessage.querySelector('.error__button');
 
-  const closeError = () => {
+  const onErrorButtonClick = () => {
     errorMessage.remove();
     document.removeEventListener('keydown', onErrorKeydown);
     document.removeEventListener('click', onErrorClick);
@@ -114,17 +114,17 @@ const showErrorMessage = () => {
 
   function onErrorKeydown(evt) {
     if (isEscapeKey(evt)) {
-      closeError();
+      onErrorButtonClick();
     }
   }
 
   function onErrorClick(evt) {
     if (!evt.target.closest('.error__inner')) {
-      closeError();
+      onErrorButtonClick();
     }
   }
 
-  errorButton.addEventListener('click', closeError);
+  errorButton.addEventListener('click', onErrorButtonClick);
   document.addEventListener('keydown', onErrorKeydown);
   document.addEventListener('click', onErrorClick);
   document.body.appendChild(errorMessage);
@@ -164,7 +164,7 @@ const openEditingForm = () => {
       document.addEventListener('keydown', onDocumentEscKeydown);
       document.body.classList.add('modal-open');
       uploadCancelButton.addEventListener('click', onUploadCancelButtonClick);
-      initImageEditor();
+      initializeImageEditor();
     }
   });
 
