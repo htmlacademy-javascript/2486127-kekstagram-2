@@ -37,7 +37,7 @@ const renderFilteredPhotos = (photos, filterFn, activeButton) => {
   showBigPicture(filteredPhotos);
 };
 
-const initFilters = (photos) => {
+const initializeFilters = (photos) => {
   imgFilters.classList.remove('img-filters--inactive');
 
   const debouncedRender = debounce((filterFn, activeButton) => {
@@ -63,4 +63,4 @@ const initFilters = (photos) => {
   });
 };
 
-export {initFilters};
+export {initializeFilters};
